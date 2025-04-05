@@ -4,7 +4,7 @@ import React from "react";
 const InputComponent = ({ onKeyDown, ref, placeholder, value, onChange }) => {
   return (
     <input
-      className="border border-black  rounded-lg  h-9 m-1.5  w-full"
+      className="border border-black  rounded-lg  h-9 m-1.5  w-full text-center"
       type="text"
       placeholder={placeholder}
       onKeyDown={onKeyDown}
