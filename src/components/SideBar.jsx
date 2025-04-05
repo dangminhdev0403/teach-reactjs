@@ -10,7 +10,7 @@ const SideBar = ({ setIsShowSideBar, todo, handleChangeTodo }) => {
   const data = { ...todo, name, isImportant, isCompleted };
 
   return (
-    <div className="text-lg fixed  top-0 right-0 border border-gray-400 h-[100vh] shadow-lg  shadow-gray-500 flex items-center justify-center flex-col">
+    <div className="text-lg fixed  top-0 right-0 border border-gray-400 h-[100vh] shadow-lg  shadow-gray-500 flex items-center justify-center flex-col w-[25rem]">
       <h4 className="font-bold text-center  text-red-500 text-2xl">
         Edit My Todo
       </h4>
@@ -20,7 +20,6 @@ const SideBar = ({ setIsShowSideBar, todo, handleChangeTodo }) => {
         onChange={(e) => setName(e.target.value)}
       />
 
-     
       <div className="ml-7">
         <span className="mr-0.5">Is Important</span>
         <input
