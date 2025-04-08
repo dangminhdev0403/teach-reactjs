@@ -1,8 +1,11 @@
-import { useRef, useState } from "react";
+import { useContext, useMemo, useRef, useState } from "react";
 import "./App.css";
+import Filter from "./components/Filter/Filter";
 import InputComponent from "./components/InputComponent";
 import SideBar from "./components/SideBar";
+import Test from "./components/Test";
 import Todo from "./components/Todo";
+import { AppContext } from "./context/FilterProvider";
 
 function App() {
   const [listTodo, setListTodo] = useState([
@@ -12,12 +15,26 @@ function App() {
     { id: 4, name: "Learn Nextjs", isImportant: false, isCompleted: false },
   ]);
 
+  const { activeFilter } = useContext(AppContext);
+
   const [isShowSideBar, setIsShowSideBar] = useState(false);
   const [idTodoActive, setIdTodoActive] = useState(null);
 
+  const [search, setSearch] = useState("");
   const todo = listTodo.find((t) => t.id === idTodoActive);
 
   const refInput = useRef(null);
+  const [text, setText] = useState(0);
+
+  // Sử dụng useMemo để memoize filterTodos
+  const filterTodos = useMemo(() => {
+    return listTodo.filter((todo) => {
+      if (activeFilter === "all") return true;
+      if (activeFilter === "important") return todo.isImportant === true;
+      if (activeFilter === "completed") return todo.isCompleted === true;
+      return todo.name.toLowerCase().includes(search.toLowerCase());
+    });
+  }, [listTodo, activeFilter, search]); // Chỉ tính toán lại khi listTodo, activeFilter, hoặc search thay đổi
 
   const handleCompleted = (todo) => {
     const newTodo = { ...todo, isCompleted: !todo.isCompleted };
@@ -28,17 +45,18 @@ function App() {
 
     setListTodo(newListTodo);
   };
+
   const handleSaveTodo = (e, name) => {
     if (e.key !== "Enter") return;
 
     const newTodo = {
       id: Date.now(),
       name: name,
+      isImportant: false,
+      isCompleted: false,
     };
 
     setListTodo((listTodo) => [...listTodo, newTodo]);
-
-    setListTodo([...listTodo, newTodo]);
 
     refInput.current.value = "";
   };
@@ -51,111 +69,20 @@ function App() {
 
     setListTodo(newListTodo);
   };
+
   const handleShowSideBar = (id) => {
     setIdTodoActive(id);
     setIsShowSideBar(true);
   };
-  console.log("re-render");
 
   return (
-    <div className="flex justify-center items-start w-full  j ">
-      <div className="w-full  flex-1 bg-[#f5f5f5] h-[20rem] rounded-b-lg shadow-2xl ">
-        <InputComponent placeholder={"Search todo"} />
-        <div className="grid grid-cols-2 gap-1 mx-auto">
-          <div className=" rounded-lg shadow-lg p-3.5 gap-1 border">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              class="lucide lucide-list"
-            >
-              <path d="M3 12h.01"></path>
-              <path d="M3 18h.01"></path>
-              <path d="M3 6h.01"></path>
-              <path d="M8 12h13"></path>
-              <path d="M8 18h13"></path>
-              <path d="M8 6h13"></path>
-            </svg>
-            <span>ALL(2)</span>
-          </div>
-          <div className=" rounded-lg shadow-lg p-3.5 gap-1 border">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              class="lucide lucide-list"
-            >
-              <path d="M3 12h.01"></path>
-              <path d="M3 18h.01"></path>
-              <path d="M3 6h.01"></path>
-              <path d="M8 12h13"></path>
-              <path d="M8 18h13"></path>
-              <path d="M8 6h13"></path>
-            </svg>
-            <span>ALL(2)</span>
-          </div>
-          <div className=" rounded-lg shadow-lg p-3.5 gap-1 border">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              class="lucide lucide-list"
-            >
-              <path d="M3 12h.01"></path>
-              <path d="M3 18h.01"></path>
-              <path d="M3 6h.01"></path>
-              <path d="M8 12h13"></path>
-              <path d="M8 18h13"></path>
-              <path d="M8 6h13"></path>
-            </svg>
-            <span>ALL(2)</span>
-          </div>
-          <div className=" rounded-lg shadow-lg p-3.5 gap-1 border">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              class="lucide lucide-list"
-            >
-              <path d="M3 12h.01"></path>
-              <path d="M3 18h.01"></path>
-              <path d="M3 6h.01"></path>
-              <path d="M8 12h13"></path>
-              <path d="M8 18h13"></path>
-              <path d="M8 6h13"></path>
-            </svg>
-            <span>ALL(2)</span>
-          </div>
-        </div>
+    <div className="flex justify-center items-start w-full">
+      <div className="w-full flex-1 bg-[#f5f5f5] h-[20rem] rounded-b-lg shadow-2xl">
+        <Filter search={search} setSearch={setSearch} listTodo={listTodo} />
       </div>
-
-      <div className="todo-list mt-10 flex-[2] justify-center flex flex-col items-center ">
+      <div className="todo-list mt-10 flex-[2] justify-center flex flex-col items-center">
         <div>
-          <h4 className="font-bold text-xl text-center  text-red-500 ">
+          <h4 className="font-bold text-xl text-center text-red-500">
             My Todo List
           </h4>
           <InputComponent
@@ -164,7 +91,7 @@ function App() {
             ref={refInput}
           />
 
-          {listTodo.map((todo) => (
+          {filterTodos.map((todo) => (
             <Todo
               todo={todo}
               key={todo.id}
@@ -182,7 +109,17 @@ function App() {
             todo={todo}
           />
         )}
+        <button
+          onClick={() => {
+            setText(text + 1);
+          }}
+          className="bg-red-500 text-white px-4 py-2 mt-4 rounded"
+        >
+          Cộng
+        </button>
       </div>
+
+      <Test text={text} setText={setText} />
     </div>
   );
 }

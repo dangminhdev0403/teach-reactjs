@@ -2,7 +2,9 @@ import PropTypes from "prop-types";
 import React, { useState } from "react";
 import InputComponent from "./InputComponent";
 
-const SideBar = ({ setIsShowSideBar, todo, handleChangeTodo }) => {
+const SideBar = ({ setIsShowSideBar, todo, handleChangeTodo, children }) => {
+  console.log("Child props" + children);
+
   const [name, setName] = useState(todo.name);
   const [isImportant, setIsImportant] = useState(todo.isImportant);
   const [isCompleted, setIsCompleted] = useState(todo.isCompleted);
