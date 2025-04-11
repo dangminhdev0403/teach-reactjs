@@ -1,8 +1,6 @@
 import PropTypes from "prop-types";
-import React from "react";
 
 const Todo = ({ todo, handleCompleted, handleShowSideBar }) => {
-
   return (
     <button
       className="flex  text-center border border-gray-400 bg-amber-200 mb-0.5 w-full"

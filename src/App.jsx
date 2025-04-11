@@ -1,4 +1,4 @@
-import { useContext, useMemo, useRef, useState } from "react";
+import { useCallback, useContext, useMemo, useRef, useState } from "react";
 import "./App.css";
 import Filter from "./components/Filter/Filter";
 import InputComponent from "./components/InputComponent";
@@ -75,6 +75,13 @@ function App() {
     setIsShowSideBar(true);
   };
 
+  const fnc = useCallback(() => {
+    () => {
+      console.log("test-render");
+    };
+  }, []);
+
+  console.log("App re-render");
   return (
     <div className="flex justify-center items-start w-full">
       <div className="w-full flex-1 bg-[#f5f5f5] h-[20rem] rounded-b-lg shadow-2xl">
@@ -119,7 +126,7 @@ function App() {
         </button>
       </div>
 
-      <Test text={text} setText={setText} />
+      <Test text={1} handleLog={fnc} />
     </div>
   );
 }
